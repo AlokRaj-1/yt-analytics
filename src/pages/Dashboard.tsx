@@ -83,6 +83,7 @@ export default function Dashboard({ channelId, onLogout }: Props) {
     error: vError,
   } = useVideoStats(id)
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null)
+  const [searchInput, setSearchInput] = useState('')
 
   const videos = flattenVideos(videoPages)
   const chartData = buildChartData(videos)
@@ -95,7 +96,7 @@ export default function Dashboard({ channelId, onLogout }: Props) {
     <div style={{ background: '#0A0A0A', minHeight: '100vh' }}>
       {/* ── Header ── */}
       <header style={{ background: '#0A0A0A', borderBottom: '4px solid #FF2D20', padding: '0 32px' }}>
-        {/* ── Top bar: logo + logout ── */}
+        {/* ── Top bar: logo + search ── */}
         <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 52 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {/* Logo mark */}
@@ -109,27 +110,61 @@ export default function Dashboard({ channelId, onLogout }: Props) {
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {onLogout && (
-              <button
-                onClick={onLogout}
-                style={{
-                  background: 'transparent',
-                  border: '2px solid #FF2D20',
-                  color: '#FF2D20',
-                  padding: '6px 14px',
-                  fontFamily: 'Space Grotesk, sans-serif',
-                  fontWeight: 700,
-                  fontSize: 10,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-              >
-                Logout
-              </button>
-            )}
-          </div>
+          {/* Channel search bar */}
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              const val = searchInput.trim()
+              if (val && onLogout) {
+                onLogout()
+                // Small timeout lets App reset state before re-submitting
+                setTimeout(() => {
+                  const event = new CustomEvent('yt-search', { detail: val })
+                  window.dispatchEvent(event)
+                }, 10)
+              }
+            }}
+            style={{ display: 'flex', alignItems: 'center', gap: 0 }}
+          >
+            <input
+              type="text"
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+              placeholder="Search YouTube channel…"
+              style={{
+                background: '#1A1A1A',
+                border: '2px solid #FF2D20',
+                borderRight: 'none',
+                color: '#F5F0E8',
+                padding: '7px 14px',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 12,
+                outline: 'none',
+                width: 260,
+                letterSpacing: '0.02em',
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: '#FF2D20',
+                border: '2px solid #FF2D20',
+                color: '#0A0A0A',
+                padding: '7px 12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label="Search channel"
+            >
+              {/* Search icon */}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="3" strokeLinecap="square">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="16.5" y1="16.5" x2="22" y2="22" />
+              </svg>
+            </button>
+          </form>
         </div>
 
         {/* ── Channel identity row — only when loaded ── */}
