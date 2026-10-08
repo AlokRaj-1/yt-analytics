@@ -95,35 +95,21 @@ export default function Dashboard({ channelId, onLogout }: Props) {
     <div style={{ background: '#0A0A0A', minHeight: '100vh' }}>
       {/* ── Header ── */}
       <header style={{ background: '#0A0A0A', borderBottom: '4px solid #FF2D20', padding: '0 32px' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* ── Top bar: logo + logout ── */}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 52 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {/* Logo mark */}
-            <div style={{ background: '#FF2D20', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
+            <div style={{ background: '#FF2D20', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="16" height="12" viewBox="0 0 18 14" fill="none">
                 <path d="M17.6 2.2C17.4 1.5 16.8 1 16.1 0.8C14.7 0.4 9 0.4 9 0.4C9 0.4 3.3 0.4 1.9 0.8C1.2 1 0.6 1.5 0.4 2.2C0 3.6 0 7 0 7C0 7 0 10.4 0.4 11.8C0.6 12.5 1.2 13 1.9 13.2C3.3 13.6 9 13.6 9 13.6C9 13.6 14.7 13.6 16.1 13.2C16.8 13 17.4 12.5 17.6 11.8C18 10.4 18 7 18 7C18 7 18 3.6 17.6 2.2ZM7.2 10V4L11.9 7L7.2 10Z" fill="#0A0A0A"/>
               </svg>
             </div>
-            <div>
-              <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 900, fontSize: 14, letterSpacing: '0.2em', color: '#F5F0E8', textTransform: 'uppercase' }}>
-                YT Analytics
-              </div>
-              {channel && (
-                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#FF2D20', letterSpacing: '0.05em' }}>
-                  {channel.title}
-                </div>
-              )}
-            </div>
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 900, fontSize: 13, letterSpacing: '0.2em', color: '#F5F0E8', textTransform: 'uppercase' }}>
+              YT Analytics
+            </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {channel && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <img src={channel.thumbnail} alt={channel.title} style={{ width: 32, height: 32, border: '2px solid #FF2D20', objectFit: 'cover' }} />
-                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#F5F0E8', opacity: 0.7 }}>
-                  {channel.subscriberCount.toLocaleString()} subscribers
-                </div>
-              </div>
-            )}
             {onLogout && (
               <button
                 onClick={onLogout}
@@ -145,6 +131,53 @@ export default function Dashboard({ channelId, onLogout }: Props) {
             )}
           </div>
         </div>
+
+        {/* ── Channel identity row — only when loaded ── */}
+        {channel && (
+          <div style={{
+            maxWidth: 1400,
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingBottom: 20,
+            gap: 20,
+          }}>
+            {/* Left: avatar + name block */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <img
+                src={channel.thumbnail}
+                alt={channel.title}
+                style={{ width: 52, height: 52, border: '3px solid #FF2D20', objectFit: 'cover', flexShrink: 0 }}
+              />
+              <div>
+                {/* Primary heading — large bold channel name with red glow */}
+                <h1 style={{
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  fontWeight: 900,
+                  fontSize: 28,
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1.1,
+                  margin: 0,
+                  color: '#F5F0E8',
+                  textShadow: '0 0 24px rgba(255,45,32,0.55), 0 0 8px rgba(255,45,32,0.3)',
+                }}>
+                  {channel.title}
+                </h1>
+                {/* Secondary details */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#FF2D20', letterSpacing: '0.04em' }}>
+                    {channel.subscriberCount.toLocaleString()} subscribers
+                  </span>
+                  <span style={{ width: 3, height: 3, background: '#FF2D20', display: 'inline-block', flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#F5F0E8', opacity: 0.45, letterSpacing: '0.04em' }}>
+                    {channel.videoCount.toLocaleString()} videos
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ── Body ── */}
